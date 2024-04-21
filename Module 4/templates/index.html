@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Object Detection</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Object Detection with Depth Measurement</h1>
+    <img id="video" src="/video_feed" alt="Video Feed" width="640" height="480">
+    <div id="info">
+        <p>Width: <span id="width">0 mm</span></p>
+        <p>Height: <span id="height">0 mm</span></p>
+        <p>Depth: <span id="depth">0 mm</span></p>
+    </div>
+    <button onclick="startDetection()">Start Detection</button>
+</div>
+<script>
+    function startDetection() {
+        const video = document.getElementById('video');
+        // Set the src of the img tag directly to the video feed route
+        video.src = '/video_feed';
+
+        setInterval(fetchMeasurements, 10000); // Call fetchMeasurements every second
+    }
+
+    function fetchMeasurements() {
+    fetch('/data_feed')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('width').textContent = `${data.width.toFixed(2)} mm`;
+            document.getElementById('height').textContent = `${data.height.toFixed(2)} mm`;
+            document.getElementById('depth').textContent = `${data.depth.toFixed(2)} mm`;
+        })
+        .catch(console.error);
+}
+
+
+
+</script>
+</body>
+</html>
